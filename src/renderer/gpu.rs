@@ -60,7 +60,7 @@ impl GpuContext {
         let (device, queue) = adapter
             .request_device(&DeviceDescriptor {
                 required_limits: adapter.limits(),
-                ..DeviceDescriptor::default()
+                ..renderer_device_descriptor()
             })
             .await?;
         device.on_uncaptured_error(Arc::new(|error| {
@@ -171,7 +171,9 @@ impl GpuRenderer {
                     ..Default::default()
                 })
                 .await?;
-            let (device, queue) = adapter.request_device(&DeviceDescriptor::default()).await?;
+            let (device, queue) = adapter
+                .request_device(&renderer_device_descriptor())
+                .await?;
             (adapter, device, queue)
         };
         let capabilities = surface.get_capabilities(&adapter);
